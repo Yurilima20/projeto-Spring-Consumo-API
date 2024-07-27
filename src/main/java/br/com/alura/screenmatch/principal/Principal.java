@@ -9,10 +9,7 @@ import br.com.alura.screenmatch.model.DadosTemporada;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
@@ -60,12 +57,21 @@ public class Principal {
                 .flatMap(t -> t.episodios().stream())
                 .collect(Collectors.toList());
 
-
+        // sabemos que esse código não teria como debugar da forma convencional, pelo fato do java fazer
+        // as operações em anônimo, mas para ver o que está acontecendo podemos a função peek() que seria
+        // uma forma de debugar essas funções.
+        // veja que quando eu quero fazer alguma operação com os dados eu chamo um map e passo
+        // a operação.
         System.out.println("\n Top 5 episodios: ");
         dadosEpisodios.stream()
                 .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                .peek( e -> System.out.println("Primeiro Filtro (N/A): " + e))
                 .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+                .peek( e -> System.out.println("Ordenação: " + e))
                 .limit(5)
+                .peek( e -> System.out.println("Limite: " + e))
+                .map( e -> e.titulo().toUpperCase())
+                .peek( e -> System.out.println("Mapeamento: " + e))
                 .forEach(System.out::println);
 
 
@@ -82,7 +88,21 @@ public class Principal {
 
         episodios.forEach(System.out::println);
 
-        //vamos applicar filtros por data agora
+        //usando optional para lhe dar com situações que pode ter null e evitar um nullpointer
+        // mais usando em métodos que pode ter um retorno null
+        System.out.println("Digite um trecho do episodio: ");
+        var trechoTitulo = leitura.nextLine();
+        Optional<Episodio> episodioBuscado = episodios.stream()
+                .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+                .findFirst();
+        if(episodioBuscado.isPresent()){
+            System.out.println("Episódio encontrado!");
+            System.out.println("Temporada: " + episodioBuscado.get().getTemporada());
+        }else {
+            System.out.println("Episódio não encontrado");
+        }
+
+        //vamos applicar filtros por data agora, damos o ano e ele traz os episodio referente
         System.out.println("A partir que ano você deseja ver os episódios ?");
         var ano = leitura.nextInt();
         leitura.nextLine();
@@ -98,6 +118,22 @@ public class Principal {
                                 "Episódio: " + e.getTitulo() +
                                 "Data Lançamento: " + e.getDataLancamento().format(formatter)
                 ));
+
+        //Usando Map para ver avaliação por temporada com collectors sintetiza dados
+        Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.groupingBy(Episodio::getTemporada,
+                        Collectors.averagingDouble(Episodio::getAvaliacao)));
+        System.out.println(avaliacoesPorTemporada);
+
+        //para trabalhar com estatísticas
+        DoubleSummaryStatistics est = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+        System.out.println("Média: " + est.getAverage());
+        System.out.println("Melhor Episódio: " + est.getMin());
+        System.out.println("Pior Episódio: " + est.getMax());
+        System.out.println("Quantidade: " + est.getCount());
 
 
     }
