@@ -6,7 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true) // ignora o que você não encontrar
 public record DadosSerie(@JsonAlias("Title") String titulo,
                          @JsonAlias("totalSeasons") Integer totalTemporadas,
-                         @JsonAlias("imdbRating") String avaliacao) {
+                         @JsonAlias("imdbRating") String avaliacao,
+                         @JsonAlias("Genre") String genero,
+                         @JsonAlias("Actors") String atores,
+                         @JsonAlias("Poster") String poster,
+                         @JsonAlias("Plot") String sinopse) {
     //@JsonProperty("imdbVotes") String votos esse aqui foi para exemplo,m irei deixar ele aqui para lembrar do property,
     // ele estava depois do avaliacao
     // diferencça entre Alias e property, o property ele serializa e desrealiza, enquanto o alias so desarializa, em outras
