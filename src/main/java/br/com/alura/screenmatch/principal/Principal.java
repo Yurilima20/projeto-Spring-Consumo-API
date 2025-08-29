@@ -183,7 +183,7 @@ public class Principal {
         seriesPorCategoria.forEach(System.out::println);
     }
 
-    private void filtrarSeriesPorTemporadaEAvaliacao() {
+    private void filtrarSeriesPorTemporadaEAvaliacao()  {
         System.out.println("Filtrar Série até quantas temporadas ? ");
         var totalTemporadas = leitura.nextInt();
         System.out.println("Com avaliação a partir de que valor ? ");

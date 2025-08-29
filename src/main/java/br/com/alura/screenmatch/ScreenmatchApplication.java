@@ -8,16 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ScreenmatchApplicationComWeb implements CommandLineRunner {
+public class ScreenmatchApplication  {
 
-   @Autowired
-   private SerieRepository repositorioSerie;
    public static void main(String[] args) {
-       SpringApplication.run(ScreenmatchApplicationComWeb.class, args);
+       SpringApplication.run(ScreenmatchApplication.class, args);
    }
-   @Override
-   public void run(String... args) throws Exception {
-       Principal principal = new Principal(repositorioSerie);
-       principal.exibeMenu();
-   }
+
 }
